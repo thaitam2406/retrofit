@@ -8,6 +8,6 @@ import retrofit.http.Headers;
 /**
  * Created by tamhuynh on 1/31/16.
  */
-public interface APIServer {
+public interface APIServerCore {
 
 }

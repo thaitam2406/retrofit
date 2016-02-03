@@ -12,12 +12,12 @@ import retrofit.Retrofit;
 /**
  * Created by tamhuynh on 1/31/16.
  */
-public class RestClient {
+public class RestClientCore {
 
-    public static APIServer apiServerInterface;
+    public static APIServerCore apiServerCoreInterface;
 
-    public synchronized static APIServer getClient() {
-        if (apiServerInterface == null) {
+    public synchronized static APIServerCore getClient() {
+        if (apiServerCoreInterface == null) {
 
             OkHttpClient okClient = new OkHttpClient();
             okClient.interceptors().add(new Interceptor() {
@@ -29,13 +29,13 @@ public class RestClient {
             });
 
             Retrofit client = new Retrofit.Builder()
-                    .baseUrl(APIConfig.domainAPI)
+                    .baseUrl(APIConfigCore.domainAPI)
                     .client(okClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-            apiServerInterface = client.create(APIServer.class);
+            apiServerCoreInterface = client.create(APIServerCore.class);
         }
-        return apiServerInterface ;
+        return apiServerCoreInterface;
     }
 
 }
