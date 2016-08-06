@@ -1,15 +1,15 @@
 package retrofit.android.tamhuynh.retrofit.rest;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
-
 import java.io.IOException;
 
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * Created by tamhuynh on 1/31/16.
@@ -28,14 +28,17 @@ public class RestClientCore {
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             OkHttpClient okClient = new OkHttpClient();
-            okClient.interceptors().add(logging);
-            okClient.interceptors().add(new Interceptor() {
+            okClient.interceptors().add(new okhttp3.Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
-                    Response response = chain.proceed(chain.request());
-                    return response;
+                    if (chain != null) {
+                        Request originalRequest = chain.request();
+                        return chain.proceed(originalRequest);
+                    }
+                    return null;
                 }
             });
+            okClient.interceptors().add(logging);
 
             Retrofit client = new Retrofit.Builder()
                     .baseUrl(APIConfigCore.domainAPI)
@@ -45,7 +48,7 @@ public class RestClientCore {
                     .build();
             apiServerCoreInterface = client.create(APIServerCore.class);
         }
-        return apiServerCoreInterface ;
+        return apiServerCoreInterface;
     }
 
 }
